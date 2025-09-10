@@ -17,9 +17,9 @@ export const createInvoiceItemSchema = invoiceItemSchema.omit({
     updatedAt: true
 });
 
-export const updateInvoiceItemSchema = invoiceItemSchema.omit({
-    createdAt: true,
-    updatedAt: true
+export const updateInvoiceItemSchema = invoiceItemSchema.partial().omit({
+    createdAt : true,
+    updatedAt : true
 });
 
 export const getInvoiceItemSchema = invoiceItemSchema.partial();
