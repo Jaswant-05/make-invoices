@@ -3,6 +3,11 @@ import { z } from "zod";
 export const userSchema = z.object({
     id: z.string(),
     email: z.email(),
+    name : z.string(),
+    number : z
+        .string()
+        .regex(/^[0-9]{10}$/)
+        .optional(),
     password: z
        .string()
        .min(8, 'The password must be at least 8 characters long')
@@ -16,6 +21,8 @@ export const userLoginSchema = userSchema.omit({
     id: true,
     createdAt: true,
     updatedAt: true,
+    number: true,
+    name: true
 })
 
 export const userSigninSchema = userSchema.omit({

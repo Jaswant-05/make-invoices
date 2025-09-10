@@ -15,16 +15,69 @@ datasource db {
 }
 
 model User {
-  id        String   @id    @default(uuid())
+  id        String   @id    @default(cuid())
   email     String   @unique
-  password  String
+  password  String?
+  name      String?
+  emailVerified DateTime?
+  image         String?
+
+  accounts      Account[]
+  sessions      Session[]
+  number        Int?
+  country_code  Int?
+
+  address   Address[]
   invoices  Invoice[]
+  label     Label?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@id([identifier, token])
+}
+ 
+
+
 model Invoice {
-  id        String   @id    @default(uuid())
+  id        String   @id    @default(cuid())
   userId    String
   billTo    String
   address   Address?
@@ -36,7 +89,7 @@ model Invoice {
 }
 
 model InvoiceItem {
-  id        String    @id    @default(uuid())
+  id        String    @id    @default(cuid())
   name      String
   quantity  Int?
   amount    Int
@@ -48,13 +101,27 @@ model InvoiceItem {
 }
 
 model Address {
-  id        String    @id    @default(uuid())
+  id        String    @id    @default(cuid())
   address1  String     
   address2  String?
   city      String
   province  String
   country   String
   invoiceId String    @unique
+  userId    String?   @unique
   
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   invoice   Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Label {
+  id        String    @id     @default(cuid())
+  filename  String
+  url       String
+  userId    String    @unique
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
