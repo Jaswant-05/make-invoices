@@ -13,6 +13,7 @@ export const userSchema = z.object({
        .min(8, 'The password must be at least 8 characters long')
        .max(32, 'The password must be a maximun 32 characters')
        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*-])[A-Za-z\d!@#$%&*-]{8,}$/),
+    address: z.string().optional(),
     createdAt: z.date(),
     updatedAt: z.date(),
 })

@@ -21,13 +21,13 @@ model User {
   name      String?
   emailVerified DateTime?
   image         String?
+  address   String?
 
   accounts      Account[]
   sessions      Session[]
   number        Int?
   country_code  Int?
 
-  address   Address[]
   invoices  Invoice[]
   label     Label?
 
@@ -74,13 +74,11 @@ model VerificationToken {
   @@id([identifier, token])
 }
  
-
-
 model Invoice {
   id        String   @id    @default(cuid())
   userId    String
   billTo    String
-  address   Address?
+  address   String?
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   invoiceItems InvoiceItem[]
@@ -100,19 +98,6 @@ model InvoiceItem {
   invoice   Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade )
 }
 
-model Address {
-  id        String    @id    @default(cuid())
-  address1  String     
-  address2  String?
-  city      String
-  province  String
-  country   String
-  invoiceId String    @unique
-  userId    String?   @unique
-  
-  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  invoice   Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-}
 
 model Label {
   id        String    @id     @default(cuid())

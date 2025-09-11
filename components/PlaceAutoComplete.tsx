@@ -18,7 +18,7 @@ export const PlaceAutoComplete = React.forwardRef<HTMLInputElement, InputProps>(
       if (!places || !inputRef.current) return;
   
       const options = {
-        fields: ['geometry', 'formatted_address']
+        fields: ['geometry', 'formatted_address', "address_components"]
       };
   
       setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));

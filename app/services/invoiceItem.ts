@@ -1,4 +1,4 @@
-import { type PrismaClient } from "@prisma/client/extension"
+import { type PrismaClient } from "../generated/prisma";
 import { CreateInvoiceItem, createInvoiceItemSchema, DeleteInvoiceItem, deleteInvoiceItemSchema, GetInvoiceItem, getInvoiceItemSchema, UpdateInvoiceItem, updateInvoiceItemSchema } from "../types/invoiceItem";
 import { success } from "zod";
 
@@ -76,11 +76,12 @@ export class invoiceItem{
         }
 
         try{
+            const { id, ...updateData } = data
             const result = await this.prisma.invoiceItem.update({
                 where : {
-                    id : data.id
+                    id
                 },
-                data
+                data  : updateData
             })
 
             if(!result){
@@ -113,7 +114,7 @@ export class invoiceItem{
         }
 
         try{
-            const result = await this.prisma.invoicItem.findFirst({
+            const result = await this.prisma.invoiceItem.findFirst({
                 where : data
             });
 
@@ -160,7 +161,7 @@ export class invoiceItem{
                 throw new Error("Error Fetching Invoice Items");
             }
 
-            result({
+            return({
                 success : true,
                 data : result
             });

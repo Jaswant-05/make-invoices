@@ -17,7 +17,6 @@ export default function Page(){
           if(!place?.formatted_address){
             return
           }
-          console.log(place?.formatted_address)
           setSelectedPlace(place?.formatted_address);
         },
     []);
@@ -26,13 +25,40 @@ export default function Page(){
         <div className="min-w-full h-full flex justify-center items-center ">
             <div className="flex flex-col gap-8 border border-gray-300 rounded-md p-12">
                 <h2 className="text-center font-bold text-2xl">Sign Up</h2>
+
                 <form action={formAction} className="flex flex-col gap-8">
-                    <Input className="" type="email" name="email" placeholder="Email" required/>
-                    <Input type="password" name="password" placeholder="Password" required/>
-                    <Input type="text" name="name" placeholder="Name" required/>
-                    <PlaceAutoComplete onPlaceSelect={handlePlaceSelect} name="address"/>
+                    <Input
+                        className="" 
+                        type="email" 
+                        name="email" 
+                        placeholder="Email" 
+                        required
+                    />
+                    <Input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        required
+                    />
+                    <Input
+                        type="text" 
+                        name="name" 
+                        placeholder="Name" 
+                        required
+                    />
+
+                    <PlaceAutoComplete 
+                        onPlaceSelect={handlePlaceSelect} 
+                        name="address"
+                    />
                     {state.error && <div className="">{state.error}</div>}
-                    <Button className="" type="submit" disabled={pending}>Submit</Button>
+                    <Button 
+                        className="" 
+                        type="submit" 
+                        disabled={pending}
+                    >
+                        Submit
+                    </Button>
                 </form>
             </div>
         </div>
