@@ -10,7 +10,7 @@ interface InputProps extends Omit<React.ComponentPropsWithoutRef<"input">, "chil
 }
 
 const variants: Record<Variant, string> = {
-  primary: "border border-gray-200 p-2 rounded-md",
+  primary: "w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent",
   secondary: "",
 };
 

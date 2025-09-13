@@ -13,11 +13,9 @@ export type AuthState = {
 }
 
 export async function signup(initialState: AuthState, formData : FormData) : Promise<AuthState> {
-    console.log(formData)
     const email = formData.get("email");
     const password = formData.get("password");
     const name = formData.get("name")
-    const address = formData.get("address")
 
     const { data, error } = z.safeParse(userSigninSchema, { email, password, name });
     if ( error ){
