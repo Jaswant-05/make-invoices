@@ -10,16 +10,16 @@ const initialState : AuthState = {}
 
 export default function Page(){
     const [state, formAction, pending] = useActionState(signup, initialState)
-    const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
+    // const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
 
-    const handlePlaceSelect = useCallback(
-        (place: google.maps.places.PlaceResult | null) => {
-          if(!place?.formatted_address){
-            return
-          }
-          setSelectedPlace(place?.formatted_address);
-        },
-    []);
+    // const handlePlaceSelect = useCallback(
+    //     (place: google.maps.places.PlaceResult | null) => {
+    //       if(!place?.formatted_address){
+    //         return
+    //       }
+    //       setSelectedPlace(place?.formatted_address);
+    //     },
+    // []);
 
     return (
         <div className="min-w-full h-full flex justify-center items-center ">
@@ -47,10 +47,10 @@ export default function Page(){
                         required
                     />
 
-                    <PlaceAutoComplete 
+                    {/* <PlaceAutoComplete 
                         onPlaceSelect={handlePlaceSelect} 
                         name="address"
-                    />
+                    /> */}
                     {state.error && <div className="">{state.error}</div>}
                     <Button 
                         className="" 
