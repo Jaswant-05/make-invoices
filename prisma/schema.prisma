@@ -75,21 +75,39 @@ model VerificationToken {
 }
  
 model Invoice {
-  id        String   @id    @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
-  billTo    String
-  address   String?
-
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyName    String
+  companyAddress String
+  companyEmail   String
+  companyNumber   String?
+
+  toCompany   String
+  toEmail     String
+  toAddress   String?
+
+  currency            String   @default("CAD")  
+  invoicePrefix       String   @default("INV-")
+  invoiceSerialNumber String
+  invoiceDate         DateTime
+  paymentTerms        String   @default("Due upon receipt")
+  additionalNotes     String?
+
+  total    Int    @default(0)
+
   invoiceItems InvoiceItem[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 
 model InvoiceItem {
   id        String    @id    @default(cuid())
   name      String
-  quantity  Int?
+  quantity  Int       @default(1)
   amount    Int
   invoiceId String
   createdAt DateTime  @default(now())

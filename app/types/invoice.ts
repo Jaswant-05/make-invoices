@@ -33,6 +33,13 @@ export const deleteInvoiceSchema = invoiceSchema.pick({
     id : true
 })
 
+export const invoiceItemFormSchema = z.object({
+    name: z.string().min(1, { message: "Item name is required" }),
+    amount: z.number().min(0, { message: "Amount must be positive" }),
+    quantity: z.number().min(1),
+    invoiceId : z.cuid().optional()
+})
+
 export const invoiceFormSchema = z.object({
     logo : z.url().optional(),
     companyName : z.string({message : "Company name is required"}),
@@ -43,20 +50,20 @@ export const invoiceFormSchema = z.object({
     }),
     toCompany : z.string({message : "Client Name is required"}),
     toEmail : z.email({message : "Client Email is Required"}),
-    invoiceCurrency : z.string().length(3, {message : "Valid currency is required"}),
+    currency : z.string().length(3, {message : "Valid currency is required"}),
     invoicePrefix : z.string({message : "Invoice Prefix is required"}),
-    invoiceSerialNumber : z.number({message : "Serial number is required"}),
+    invoiceSerialNumber : z.string({message : "Serial number is required"}),
     invoiceDate : z.date({message : "Invoice date is required"}),
     paymentTerms : z.string().optional(),
-    invoiceItems : z.array(invoiceItemSchema).min(1, {
+    invoiceItems : z.array(invoiceItemFormSchema).min(1, {
         message : "At least 1 Invoice Item is required"
     }),
     additionalNotes: z.string().optional()
 })
-
 
 export type Invoice = z.infer<typeof invoiceSchema>;
 export type CreateInvoice = z.infer<typeof createInvoiceSchema>;
 export type UpdateInvoice= z.infer<typeof updateInvoiceSchema>;
 export type GetInvoice = z.infer<typeof getInvoicSchema>;
 export type DeleteInvoice = z.infer<typeof deleteInvoiceSchema>;
+export type InvoiceFormSchema = z.infer<typeof invoiceFormSchema>

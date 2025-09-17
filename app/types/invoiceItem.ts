@@ -3,7 +3,7 @@ import { z } from "zod";
 export const invoiceItemSchema = z.object({
     id : z.cuid(),
     name : z.string(),
-    quantity : z.number().optional(),
+    quantity : z.number(),
     amount : z.number(),
     invoiceId : z.cuid(),
     createdAt : z.date(),
