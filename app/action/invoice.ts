@@ -29,13 +29,15 @@ export async function createInvoice(formData : InvoiceFormSchema){
         })
     }
 
-    const session = getServerSession(authOptions)
+    const session = await getServerSession(authOptions)
     if(!session){
         return({
             success : false,
             error : "Unauthorized"
         })
     }
+
+    const userId = session.user.id
 
     try{
         console.log("inside try/catch")
@@ -47,7 +49,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
           const { invoiceItems, ...payload } = {
             ...data,
             total: invoiceTotal,
-            userId: "cmfiqwnhg0000yhj0ubu1amy0",        
+            userId    
           };
           
           const invoice = await prisma.invoice.create({
