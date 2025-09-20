@@ -1,7 +1,6 @@
 
 // TODO : Download Past invoices page // dashboard/invoices page
 // TODO : Email verification for credentials login and reset password use Resend
-// TODO : landing page
 // TODO : toast instaed of alerts
 
 import CTA from '@/components/CTA';
