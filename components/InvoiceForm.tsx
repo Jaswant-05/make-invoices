@@ -361,7 +361,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                     </Accordion>
                     <Accordion type="single" collapsible className="border px-4 py-1 border-neutral-100 mb-0">
                         <AccordionItem value="item-5">
-                            <AccordionTrigger className="text-md text-neutral-800 font-medium tracking-tight">Customer Details</AccordionTrigger>
+                            <AccordionTrigger className="text-md text-neutral-800 font-medium tracking-tight">Notes</AccordionTrigger>
                             <AccordionContent>
                                 <FormField
                                     control={form.control}
