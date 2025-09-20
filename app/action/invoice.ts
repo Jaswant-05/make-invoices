@@ -2,7 +2,7 @@
 import { invoiceFormSchema, InvoiceFormSchema } from "../types/invoice";
 import { getServerSession } from "next-auth";
 import prisma from "../utils/db";
-import { auth_option } from "../utils/auth-option";
+import { authOptions } from "../utils/auth-option";
 // {
 //     companyName: 'Numericnest.Inc',
 //     companyAddress: '63 Iceland poppy trail, Brampton, ON, L7A 0N1',
@@ -28,7 +28,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
         })
     }
 
-    const session = getServerSession(auth_option)
+    const session = getServerSession(authOptions)
     if(!session){
         return({
             success : false,

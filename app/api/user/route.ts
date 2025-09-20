@@ -1,11 +1,11 @@
 import { userUpdateSchema } from "@/app/types/user";
-import { auth_option } from "@/app/utils/auth-option";
+import { authOptions } from "@/app/utils/auth-option";
 import prisma from "@/app/utils/db";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
-    const session = await getServerSession(auth_option)
+    const session = await getServerSession(authOptions)
     if(!session){
         return NextResponse.json(
             { error: "User ID not found" },
@@ -46,7 +46,7 @@ export async function PUT(req: NextRequest){
         }, {status : 403})
     }
 
-    const session = await getServerSession(auth_option)
+    const session = await getServerSession(authOptions)
     if(!session){
         return NextResponse.json(
             { error: "User ID not found" },
