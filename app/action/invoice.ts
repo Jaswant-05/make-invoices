@@ -51,7 +51,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
             total: invoiceTotal,
             userId    
           };
-          
+          console.log("here");
           const invoice = await prisma.invoice.create({
             data: {
               ...payload,
@@ -65,6 +65,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
             },
             include: { invoiceItems: true }, 
           });
+          console.log(invoice)
 
           console.log("success")
           return({
@@ -73,6 +74,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
           })
     }
     catch(err: any){
+        console.log(err)
         return({
             success : false,
             error : err.message
