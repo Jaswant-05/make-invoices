@@ -66,6 +66,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
         append(item)
         setModal(false)
     }
+    console.log(form.formState.errors.invoiceItems)
 
     return (
         <div className="flex-1 border-r h-full">
@@ -354,6 +355,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                                 <Button onClick={handleModal} variant={"outline"} type="button" className="flex-1">
                                     <ListPlus /> Add Invoice Item
                                 </Button>
+                                {form.formState.errors.invoiceItems?.message && <p className="text-red-500 text-[0.65rem] pt-4 tracking-tight">{form.formState.errors.invoiceItems.message}</p>}
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
@@ -380,7 +382,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
-                    <div className="flex items-center justify-end mb-0 mt-1 p-4 gap-2">
+                    <div className="hidden md:flex items-center justify-end mb-0 mt-1 p-4 gap-2">
                         <Button type="submit">Save</Button>
                         <Button type="button" variant={"outline"} onClick={handleDownload}>Download</Button>
                     </div>

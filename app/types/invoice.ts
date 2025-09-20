@@ -42,17 +42,17 @@ export const invoiceItemFormSchema = z.object({
 
 export const invoiceFormSchema = z.object({
     logo : z.url().optional(),
-    companyName : z.string({message : "Company name is required"}),
-    companyAddress : z.string({message : "Company address is required"}),
+    companyName : z.string().min(3, {message : "Company name is required"}),
+    companyAddress : z.string().min(8, {message : "valid address is required"}),
     companyEmail : z.email({message : "Company Email is required"}),
     companyNumber : z.string().length(10, {
         message : "Phone number should be 10 digits"
     }),
-    toCompany : z.string({message : "Client Name is required"}),
+    toCompany : z.string().min(3, {message : "Client Name is required"}),
     toEmail : z.email({message : "Client Email is Required"}),
-    currency : z.string().length(3, {message : "Valid currency is required"}),
-    invoicePrefix : z.string({message : "Invoice Prefix is required"}),
-    invoiceSerialNumber : z.string({message : "Serial number is required"}),
+    currency : z.string().length(3, {message : "Please select a valid currency"}),
+    invoicePrefix : z.string().min(1, {message : "Invoice Prefix is required"}),
+    invoiceSerialNumber : z.string().min(1, {message : "Serial number is required"}),
     invoiceDate : z.date({message : "Invoice date is required"}),
     paymentTerms : z.string().optional(),
     invoiceItems : z.array(invoiceItemFormSchema).min(1, {

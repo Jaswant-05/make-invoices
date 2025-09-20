@@ -16,7 +16,7 @@ export default function InvoiceItemModal({ onAddItem, onClose }: InvoiceItemModa
         defaultValues: {
             name: "",
             amount: 0,
-            quantity: undefined
+            quantity: 1
         }
     })
 
@@ -52,8 +52,8 @@ export default function InvoiceItemModal({ onAddItem, onClose }: InvoiceItemModa
                                     <FormLabel>Amount</FormLabel>
                                     <FormControl>
                                         <Input 
-                                            type="number" 
-                                            placeholder="0.00" 
+                                            type="text" 
+                                            placeholder="0" 
                                             {...field}
                                             onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                                         />
@@ -74,10 +74,9 @@ export default function InvoiceItemModal({ onAddItem, onClose }: InvoiceItemModa
                                             <FormLabel>Quantity (Optional)</FormLabel>
                                             <FormControl>
                                                 <Input 
-                                                    type="number" 
+                                                    type="text" 
                                                     placeholder="1" 
-                                                    value={field.value ?? ""} // Add this line
-                                                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                                                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : 0)}
                                                 />
                                             </FormControl>
                                             <FormMessage />

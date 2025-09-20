@@ -1,52 +1,57 @@
 "use server"
 
-import { z } from "zod";
 import { User, userSigninSchema } from "../types/user";
 import bcrypt from "bcryptjs";
 import prisma from "../utils/db";
 
 export type AuthState = {
-    message? : string,
-    error? : string,
-    token? : string,
-    user? : User
+    message?: string,
+    error?: string,
+    token?: string,
+    user?: User
 }
 
-export async function signup(initialState: AuthState, formData : FormData) : Promise<AuthState> {
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const name = formData.get("name")
+export async function signup(initialState: AuthState, formData: FormData): Promise<AuthState> {
+    const values = {
+        email: String(formData.get("email") ?? ""),
+        password: String(formData.get("password") ?? ""),
+        name: String(formData.get("name") ?? ""),
+    };
 
-    const { data, error } = z.safeParse(userSigninSchema, { email, password, name });
-    if ( error ){
-        return { error: error.message};
+    const parsed = userSigninSchema.safeParse(values);
+
+    if (!parsed.success) {
+        const messages = parsed.error.issues.map((issue) => issue.message);
+        return { error: messages[0] };
     }
 
-    try{
+    const { email, password, name } = parsed.data;
+
+    try {
         const user = await prisma.user.findUnique({
-            where: { email: data.email }
+            where: { email }
         });
 
-        if ( user ){
-            return { error: "User already exists"};
+        if (user) {
+            return { error: "User already exists" };
         }
 
-        const hashedPassword = await bcrypt.hash(data.password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await prisma.user.create({
-            data: { email: data.email, password: hashedPassword, name: data.name }
+            data: { email, password: hashedPassword, name }
         });
 
-        if(!newUser){
-            return { error: "Failed to create user"};
+        if (!newUser) {
+            return { error: "Failed to create user" };
         }
 
-        return { 
-            message : "User created successfully"
+        return {
+            message: "User created successfully"
         }
 
     }
-    catch(error){
-        return { error: "Internal server error"};
+    catch (error) {
+        return { error: "Internal server error" };
     }
 }

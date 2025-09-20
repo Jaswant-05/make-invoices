@@ -1,8 +1,8 @@
 "use server"
-import { getSession } from "next-auth/react";
 import { invoiceFormSchema, InvoiceFormSchema } from "../types/invoice";
+import { getServerSession } from "next-auth";
 import prisma from "../utils/db";
-
+import { auth_option } from "../utils/auth-option";
 // {
 //     companyName: 'Numericnest.Inc',
 //     companyAddress: '63 Iceland poppy trail, Brampton, ON, L7A 0N1',
@@ -19,15 +19,20 @@ import prisma from "../utils/db";
 //     additionalNotes: ''
 // }
 
-
-
 export async function createInvoice(formData : InvoiceFormSchema){
     const { data, error } = invoiceFormSchema.safeParse(formData);
-
     if(error){
         return({
             success : false,
             error : error.message
+        })
+    }
+
+    const session = getServerSession(auth_option)
+    if(!session){
+        return({
+            success : false,
+            error : "Unauthorized"
         })
     }
 
@@ -41,7 +46,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
           const { invoiceItems, ...payload } = {
             ...data,
             total: invoiceTotal,
-            userId: "cmfiqwnhg0000yhj0ubu1amy0",
+            userId: "cmfiqwnhg0000yhj0ubu1amy0",        
           };
           
           const invoice = await prisma.invoice.create({

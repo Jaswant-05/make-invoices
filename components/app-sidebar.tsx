@@ -31,7 +31,7 @@ const items = [
   },
   {
     title: "Settings",
-    url: "dashboard/settings",
+    url: "/dashboard/settings",
     icon: Settings,
   },
 ]
