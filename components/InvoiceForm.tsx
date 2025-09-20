@@ -44,6 +44,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
 
     async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
         try{
+            console.log(values)
             const result = await createInvoice(values);
             if(result.error){
                 throw new Error(`Error creating Invoice ${result.error.message}`)
@@ -52,7 +53,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
             alert("Successfully Saved Invoice")
         }
         catch(err: any){
-            console.error("Error creating Invoice", err.message)
+            console.error("Error creating Invoice", err)
             alert("Error in creating an Invoice")
         }
 
@@ -66,7 +67,6 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
         append(item)
         setModal(false)
     }
-    console.log(form.formState.errors.invoiceItems)
 
     return (
         <div className="flex-1 border-r h-full">
