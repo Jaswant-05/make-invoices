@@ -1,4 +1,4 @@
-import { type PrismaClient } from "../generated/prisma";
+import { type PrismaClient } from "@prisma/client";
 import { CreateInvoiceItem, createInvoiceItemSchema, DeleteInvoiceItem, deleteInvoiceItemSchema, GetInvoiceItem, getInvoiceItemSchema, UpdateInvoiceItem, updateInvoiceItemSchema } from "../types/invoiceItem";
 import { success } from "zod";
 import { BaseCRUD } from "./BaseCRUD";
