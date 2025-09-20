@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
+import { type PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 export abstract class BaseCRUD<T, CreateT, UpdateT, GetT, DeleteT> {

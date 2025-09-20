@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
+import { type PrismaClient } from "@prisma/client";
 import { CreateInvoice, createInvoiceSchema, DeleteInvoice, deleteInvoiceSchema, GetInvoice, getInvoicSchema, UpdateInvoice, updateInvoiceSchema } from "../types/invoice";
 import { BaseCRUD } from "./BaseCRUD";
 
