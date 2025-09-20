@@ -20,6 +20,7 @@ import { authOptions } from "../utils/auth-option";
 // }
 
 export async function createInvoice(formData : InvoiceFormSchema){
+    console.log("here")
     const { data, error } = invoiceFormSchema.safeParse(formData);
     if(error){
         return({
@@ -37,7 +38,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
     }
 
     try{
-
+        console.log("inside try/catch")
         const invoiceTotal = data.invoiceItems.reduce(
             (acc, curr) => acc + (curr.quantity ?? 1) * curr.amount,
             0
@@ -63,6 +64,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
             include: { invoiceItems: true }, 
           });
 
+          console.log("success")
           return({
             success : true,
             data : invoice
