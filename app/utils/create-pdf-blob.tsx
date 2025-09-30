@@ -85,7 +85,9 @@ import {
   function InvoicePDF({ invoice }: { invoice: Invoice }) {
     const items = invoice.invoiceItems ?? [];
     const subtotal = items.reduce((acc, it) => acc + it.amount * qty(it.quantity), 0);
-    const total = subtotal; // extend with tax/discount later
+    const taxPct = parseInt(invoice.tax as any) || 0;
+    const taxAmount = subtotal * (taxPct / 100);
+    const total = subtotal + taxAmount;
   
     return (
       <PdfDoc>
@@ -108,7 +110,7 @@ import {
               </Text>
               <Text style={[styles.label, { marginTop: 6 }]}>Date</Text>
               <Text style={styles.value}>
-                {new Date(invoice.invoiceDate).toLocaleDateString()}
+                {invoice.invoiceDate ? new Date(invoice.invoiceDate).toLocaleDateString() : ""}
               </Text>
               {invoice.paymentTerms && (
                 <>
@@ -118,7 +120,7 @@ import {
               )}
             </View>
           </View>
-  
+
           <View style={[styles.section, styles.row]}>
             <View style={styles.col}>
               <Text style={styles.label}>Bill To</Text>
@@ -130,7 +132,7 @@ import {
               <Text style={styles.value}>{invoice.currency}</Text>
             </View>
           </View>
-  
+
           <View style={[styles.section, styles.table]}>
             <View style={styles.thRow}>
               <Text style={[styles.th, { flex: 2 }]}>Item</Text>
@@ -157,18 +159,22 @@ import {
               })
             )}
           </View>
-  
+
           <View style={styles.totals}>
             <View style={styles.totalsRow}>
-              <Text style={styles.label}>Subtotal</Text>
+              <Text style={styles.label}>Total without tax</Text>
               <Text style={styles.value}>{currencyFmt(invoice.currency, subtotal)}</Text>
+            </View>
+            <View style={styles.totalsRow}>
+              <Text style={styles.label}>Tax ({taxPct.toFixed(2)}%)</Text>
+              <Text style={styles.value}>{currencyFmt(invoice.currency, taxAmount)}</Text>
             </View>
             <View style={styles.totalsRow}>
               <Text style={styles.label}>Total</Text>
               <Text style={styles.value}>{currencyFmt(invoice.currency, total)}</Text>
             </View>
           </View>
-  
+
           {invoice.additionalNotes && (
             <View style={styles.notes}>
               <Text style={styles.label}>Notes</Text>

@@ -20,7 +20,6 @@ import { authOptions } from "../utils/auth-option";
 // }
 
 export async function createInvoice(formData : InvoiceFormSchema){
-    console.log("here")
     const { data, error } = invoiceFormSchema.safeParse(formData);
     if(error){
         return({
@@ -40,38 +39,40 @@ export async function createInvoice(formData : InvoiceFormSchema){
     const userId = session.user.id
 
     try{
-        console.log("inside try/catch")
         const invoiceTotal = data.invoiceItems.reduce(
             (acc, curr) => acc + (curr.quantity ?? 1) * curr.amount,
             0
-          );
-          
-          const { invoiceItems, ...payload } = {
-            ...data,
-            total: invoiceTotal,
-            userId    
-          };
-          console.log("here");
-          const invoice = await prisma.invoice.create({
-            data: {
-              ...payload,
-              invoiceItems: {
-                create: invoiceItems.map((item) => ({
-                  name: item.name,
-                  quantity: item.quantity ?? 1,
-                  amount: item.amount,
-                })),
-              },
-            },
-            include: { invoiceItems: true }, 
-          });
-          console.log(invoice)
+        );
 
-          console.log("success")
-          return({
-            success : true,
-            data : invoice
-          })
+        const tax = data.tax ? parseInt(data.tax as any) : 0;
+        const total_with_tax = invoiceTotal + (invoiceTotal * (tax/100))
+
+          
+        const { invoiceItems, ...payload } = {
+          ...data,
+          total: invoiceTotal,
+          total_with_tax,
+          userId    
+        };
+
+        const invoice = await prisma.invoice.create({
+          data: {
+            ...payload,
+            invoiceItems: {
+              create: invoiceItems.map((item) => ({
+                name: item.name,
+                quantity: item.quantity ?? 1,
+                amount: item.amount,
+              })),
+            },
+          },
+          include: { invoiceItems: true }, 
+        });
+
+        return({
+          success : true,
+          data : invoice
+        })
     }
     catch(err: any){
         console.log(err)

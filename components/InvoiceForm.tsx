@@ -44,7 +44,6 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
 
     async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
         try{
-            console.log(values)
             const result = await createInvoice(values);
             if(result.error){
                 throw new Error(`Error creating Invoice ${result.error.message}`)
@@ -297,22 +296,40 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                                         )}
                                     />
                                 </div>
-                                <FormField
-                                    control={form.control}
-                                    name="paymentTerms"
-                                    render={({ field }) => (
-                                        <FormItem className="mb-4">
-                                            <FormLabel className="text-sm text-neutral-600 tracking-tight">Payment Terms</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="100% Due Now" {...field} className="tracking-tight" />
-                                            </FormControl>
-                                            <FormDescription className="text-[0.65rem] tracking-tight text-neutral-500">
-                                                &#9432; Payment Terms.
-                                            </FormDescription>
-                                            <FormMessage className="text-[0.65rem]" />
-                                        </FormItem>
-                                    )}
-                                />
+                                <div className="flex gap-8">
+                                    <FormField
+                                        control={form.control}
+                                        name="paymentTerms"
+                                        render={({ field }) => (
+                                            <FormItem className="mb-4 flex-1">
+                                                <FormLabel className="text-sm text-neutral-600 tracking-tight">Payment Terms</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="100% Due Now" {...field} className="tracking-tight" />
+                                                </FormControl>
+                                                <FormDescription className="text-[0.65rem] tracking-tight text-neutral-500">
+                                                    &#9432; Payment Terms.
+                                                </FormDescription>
+                                                <FormMessage className="text-[0.65rem]" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="tax"
+                                        render={({ field }) => (
+                                            <FormItem className="mb-4 flex-1">
+                                                <FormLabel className="text-sm text-neutral-600 tracking-tight">Tax Rate</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" placeholder="" {...form.register("tax", { valueAsNumber: true })}  className="tracking-tight" />
+                                                </FormControl>
+                                                <FormDescription className="text-[0.65rem] tracking-tight text-neutral-500">
+                                                    &#9432; Tax rate.
+                                                </FormDescription>
+                                                <FormMessage className="text-[0.65rem]" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

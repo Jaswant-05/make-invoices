@@ -75,7 +75,8 @@ export default function Dashboard() {
             invoiceDate: new Date(),
             paymentTerms: "Due upon receipt",
             additionalNotes: "",
-            invoiceItems: []
+            invoiceItems: [],
+            tax : 0 
         },
     });
 
@@ -87,8 +88,10 @@ export default function Dashboard() {
                 const res = await axios.get("/api/user");
                 const userData = res.data.data;
                 setUser(userData);
+
                 form.setValue("companyName", userData.name);
                 form.setValue("companyEmail", userData.email);
+
                 userData.address && form.setValue("companyAddress", userData.address);
                 userData.number && form.setValue("companyNumber", userData.number);
                 setIsDataLoaded(true);
@@ -164,7 +167,7 @@ export default function Dashboard() {
                         })}
                         className="flex-1"
                     >
-                        Save Invoice
+                        Save
                     </Button>
                     <Button
                         type="button"
