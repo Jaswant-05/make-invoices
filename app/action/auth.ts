@@ -3,6 +3,8 @@
 import { User, userSigninSchema } from "../types/user";
 import bcrypt from "bcryptjs";
 import prisma from "../utils/db";
+import { generateCode } from "../utils/generate_code";
+import axios from "axios";
 
 export type AuthState = {
     message?: string,
@@ -38,12 +40,40 @@ export async function signup(initialState: AuthState, formData: FormData): Promi
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        const codePayload = {
+            len : 6
+        }
+        const code = generateCode(codePayload);
+        if(!code){
+            return {
+                message : "Failed to generate code"
+            }
+        }
         const newUser = await prisma.user.create({
-            data: { email, password: hashedPassword, name }
+            data: { email, password: hashedPassword, name, emailToken: code }
         });
 
         if (!newUser) {
             return { error: "Failed to create user" };
+        }
+
+        const url = `${process.env.BASE_URL}/verify/?token=${code}`;
+
+        const emailProps : Record<string, any> = {
+            name : newUser.name,
+            url
+        }
+
+        const result = await axios.post('/api/send', {
+            to: newUser.email,
+            subject: "Make Invoices Email Verification Link",
+            templateKey: "onboarding",
+            props: emailProps,
+          });
+
+        if(result.data.error) {
+            console.error(result.data.error)
+            return { error: "Error sending email"};
         }
 
         return {

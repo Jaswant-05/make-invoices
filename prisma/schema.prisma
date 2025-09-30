@@ -20,8 +20,12 @@ model User {
   password  String?
   name      String?
   emailVerified DateTime?
+  emailToken    String?
   image         String?
   address   String?
+
+  passwordToken String?
+  tokenExpiry   DateTime?
 
   accounts      Account[]
   sessions      Session[]
