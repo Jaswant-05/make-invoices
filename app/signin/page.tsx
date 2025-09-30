@@ -31,7 +31,7 @@ export default function SignIn() {
 
     try {
       const result = await signIn("credentials", {
-        email: formData.email,
+        username: formData.email,
         password: formData.password,
         redirect: false,
       });
@@ -129,7 +129,7 @@ export default function SignIn() {
           </div>
 
           <div className="text-right">
-            <a href="/auth/forgot-password" className="text-xs text-slate-600 hover:underline">
+            <a href="/password" className="text-xs text-slate-600 hover:underline">
               Forgot password?
             </a>
           </div>
