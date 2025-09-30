@@ -93,6 +93,8 @@ model Invoice {
   invoiceDate         DateTime
   paymentTerms        String   @default("Due upon receipt")
   additionalNotes     String?
+  tax                 Int      @default(0)
+  total_with_tax      Int      @default(0)
 
   total    Int    @default(0)
 

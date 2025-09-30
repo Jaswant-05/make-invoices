@@ -11,14 +11,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { cloneDeep, debounce, isEqual } from "lodash";
 import { UseFormReturn } from "react-hook-form";
 import z from "zod";
-import { invoiceFormSchema } from "@/app/types/invoice";
+import { invoiceFormSchema, invoiceItemFormSchema } from "@/app/types/invoice";
 import { Document, Page } from "react-pdf";
 
 type InvoiceValues = z.infer<typeof invoiceFormSchema>;
-
+type InvoiceItem = z.infer<typeof invoiceItemFormSchema>
 const PDF_VIEWER_PADDING = 18;
 
-/** Blob URL helper for iframe mode */
 function useBlobUrl(blob: Blob | null) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
@@ -30,7 +29,6 @@ function useBlobUrl(blob: Blob | null) {
   return url;
 }
 
-/** Make partial/invalid values safe for the PDF template */
 function makeSafeInvoice(v: Partial<InvoiceValues>): InvoiceValues {
   return {
     logo: v.logo ?? undefined,
@@ -53,10 +51,10 @@ function makeSafeInvoice(v: Partial<InvoiceValues>): InvoiceValues {
           quantity: typeof it?.quantity === "number" && it!.quantity! > 0 ? it!.quantity : 1,
         }))
       : [],
+    tax : v.tax ?? 0
   };
 }
 
-/** One viewer that can render via react-pdf or iframe */
 function PdfLayer({
   blob,
   width,

@@ -58,6 +58,7 @@ export const invoiceFormSchema = z.object({
     invoiceItems : z.array(invoiceItemFormSchema).min(1, {
         message : "At least 1 Invoice Item is required"
     }),
+    tax: z.number().optional(),
     additionalNotes: z.string().optional()
 })
 
