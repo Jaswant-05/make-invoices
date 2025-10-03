@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Eye, EyeOff, Chrome } from "lucide-react";
+import { toast } from "sonner";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ export default function SignIn() {
 
     try {
       const result = await signIn("credentials", {
-        email: formData.email,
+        username: formData.email,
         password: formData.password,
         redirect: false,
       });
@@ -40,14 +41,19 @@ export default function SignIn() {
         setError("Invalid email or password");
       } else if (result?.ok) {
         await getSession();
-        router.push("/dashboard");
-        router.refresh();
+        setTimeout(() => {
+          console.log("inside timeout")
+          router.push("/dashboard");
+          router.refresh();
+        },1000)
+        toast.success("Login Successfull")
+        setIsLoading(false);
       }
     } catch (err) {
+      toast("something went wrong")
       setError("Something went wrong. Please try again.");
-    } finally {
       setIsLoading(false);
-    }
+    } 
   };
 
   const handleGoogleSignIn = async () => {
@@ -57,6 +63,7 @@ export default function SignIn() {
         callbackUrl: "/dashboard"
       });
     } catch (err) {
+      toast.warning("Something went wrong")
       setError("Failed to sign in with Google");
       setIsLoading(false);
     }
@@ -129,7 +136,7 @@ export default function SignIn() {
           </div>
 
           <div className="text-right">
-            <a href="/auth/forgot-password" className="text-xs text-slate-600 hover:underline">
+            <a href="/password" className="text-xs text-slate-600 hover:underline">
               Forgot password?
             </a>
           </div>

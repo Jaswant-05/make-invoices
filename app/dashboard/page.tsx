@@ -16,6 +16,7 @@ import { createInvoice } from '../action/invoice';
 import axios from "axios"
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 type User = {
     id: string,
@@ -55,8 +56,7 @@ export default function Dashboard() {
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Failed to download PDF:', error);
-            // TODO: change to toast
-            alert('Failed to download PDF. Please try again.');
+            toast.warning('Failed to download PDF. Please try again.');
         }
     }
 
@@ -159,10 +159,10 @@ export default function Dashboard() {
                                 if (result.error) {
                                     throw new Error(`Error creating Invoice ${result.error.message}`);
                                 }
-                                alert("Successfully Saved Invoice");
+                                toast.success("Successfully Saved Invoice");
                             } catch (err: any) {
                                 console.error("Error creating Invoice", err.message);
-                                alert("Error in creating an Invoice");
+                                toast.warning("Error in creating an Invoice");
                             }
                         })}
                         className="flex-1"

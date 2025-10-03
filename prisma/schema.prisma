@@ -19,9 +19,13 @@ model User {
   email     String   @unique
   password  String?
   name      String?
-  emailVerified DateTime?
+  emailVerified DateTime? 
+  emailToken    String? @unique
   image         String?
   address   String?
+
+  passwordToken String? @unique
+  tokenExpiry   DateTime?
 
   accounts      Account[]
   sessions      Session[]
