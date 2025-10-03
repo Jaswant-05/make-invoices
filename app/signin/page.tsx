@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Eye, EyeOff, Chrome } from "lucide-react";
+import { toast } from "sonner";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -40,14 +41,19 @@ export default function SignIn() {
         setError("Invalid email or password");
       } else if (result?.ok) {
         await getSession();
-        router.push("/dashboard");
-        router.refresh();
+        setTimeout(() => {
+          console.log("inside timeout")
+          router.push("/dashboard");
+          router.refresh();
+        },1000)
+        toast.success("Login Successfull")
+        setIsLoading(false);
       }
     } catch (err) {
+      toast("something went wrong")
       setError("Something went wrong. Please try again.");
-    } finally {
       setIsLoading(false);
-    }
+    } 
   };
 
   const handleGoogleSignIn = async () => {
@@ -57,6 +63,7 @@ export default function SignIn() {
         callbackUrl: "/dashboard"
       });
     } catch (err) {
+      toast.warning("Something went wrong")
       setError("Failed to sign in with Google");
       setIsLoading(false);
     }

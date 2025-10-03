@@ -28,13 +28,13 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import InvoiceItemModal, { createInvoiceItemForm } from "./InvoiceItemModal";
 import { createInvoice } from "@/app/action/invoice";
+import { toast } from "sonner";
 
 interface InvoiceFormProps {
     form: UseFormReturn<z.infer<typeof invoiceFormSchema>>
     handleDownload : () => void
 }
 
-//Todo replace Alert with Toast
 export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) {
     const [modal, setModal] = useState(false)
     const { fields, append, remove } = useFieldArray({
@@ -49,11 +49,11 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                 throw new Error(`Error creating Invoice ${result.error.message}`)
             }
 
-            alert("Successfully Saved Invoice")
+            toast.success("Successfully Saved Invoice")
         }
         catch(err: any){
             console.error("Error creating Invoice", err)
-            alert("Error in creating an Invoice")
+            toast.warning("Error in creating an Invoice")
         }
 
     }

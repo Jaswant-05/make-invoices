@@ -13,6 +13,7 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Loader2 } from "lucide-react"
 import z from "zod"
+import { toast } from "sonner"
 
 type State = "initial" | "loading" | "unauthenticated" | "ready"
 
@@ -70,7 +71,7 @@ export default function UserProfileForm() {
                 setIsDataLoaded(true);
             } catch(err: any) {
                 console.error(err.message);
-                alert("Failed to fetch user data");
+                toast.warning("Failed to fetch user data");
             }
         };
 
@@ -81,7 +82,7 @@ export default function UserProfileForm() {
         setIsSubmitting(true);
         try {
             await axios.put("/api/user", values);
-            console.log("Profile updated:", values);
+            toast.success("Changed Details")
 
         } catch (error) {
             console.error("Failed to update profile:", error);

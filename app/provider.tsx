@@ -2,6 +2,7 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { APIProvider } from '@vis.gl/react-google-maps';
+import { Toaster } from 'sonner';
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
