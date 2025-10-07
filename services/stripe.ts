@@ -1,5 +1,8 @@
 import prisma from "@/utils/db";
+import { sub } from "date-fns";
 import Stripe from "stripe";
+import { Frequency, Plan, Status } from "@prisma/client";
+import { plans } from "@/utils/plans";
 
 const stripe  = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -64,6 +67,10 @@ export const stripeService = {
                   },
                 ],
                 currency: "USD",
+                billing_address_collection : "auto",
+                subscription_data : {
+                    trial_period_days: 14
+                },
                 success_url: `${process.env.BASE_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${process.env.BASE_URL}`
             });
@@ -117,9 +124,13 @@ export const stripeService = {
     },
 
     // checkout.session.completed
-    async handleSessionComplete({ object } : Stripe.CheckoutSessionCompletedEvent.Data){
-        const stripe_customer_id = object.customer?.toString() ;
-        const subscription_id = object.subscription?.toString();
+    async handleSessionComplete( event : Stripe.CheckoutSessionCompletedEvent){
+        const stripe_customer_id = typeof event.data.object.customer === "string" 
+            ? event.data.object.customer 
+            : event.data.object.customer?.id
+        const subscription_id = typeof event.data.object.subscription === "string" 
+            ? event.data.object.subscription 
+            : event.data.object.subscription?.id
 
         if(!stripe_customer_id || !subscription_id){
             throw new Error("Missing required fields");
@@ -135,38 +146,155 @@ export const stripeService = {
             throw new Error("Unable to fetch user");
         }
 
-        const subscription : Stripe.Subscription = await stripe.subscriptions.retrieve(subscription_id);
+        const subscription = await stripe.subscriptions.retrieve(subscription_id);
+        // Ensure we have the subscription before checking status
         if(!subscription){
             throw new Error("Error retrieving subscription from stripe");
         }
+        // Accept trialing or active at completion time
+        if(subscription.status !== "active" && subscription.status !== "trialing"){
+            throw new Error("Subscription is not active or trialing");
+        }
+
+        // Determine plan and frequency from the subscription's price
+        const item = subscription.items.data[0];
+        const price = item?.price;
+        const priceId = price?.id;
+        const interval = price?.recurring?.interval; // 'month' | 'year'
+
+        if(!priceId || !interval){
+            throw new Error("Missing price information on subscription");
+        }
+
+        // Map priceId to our plan name
+        const mapPriceToPlan = (pid: string): Plan | null => {
+            if (plans.basic.monthly.price_id === pid || plans.basic.yearly.price_id === pid) return Plan.BASIC;
+            if (plans.plus.monthly.price_id === pid || plans.plus.yearly.price_id === pid) return Plan.PLUS;
+            if (plans.premium.monthly.price_id === pid || plans.premium.yearly.price_id === pid) return Plan.PREMIUM;
+            return null;
+        };
+
+        const plan = mapPriceToPlan(priceId);
+        if(!plan){
+            throw new Error("Unrecognized price id for mapping to plan");
+        }
+        const frequency: Frequency = interval === "month" ? Frequency.MONTHLY : Frequency.YEARLY;
+        const status: Status = subscription.status === "trialing" ? Status.TRAIL : Status.PAID;
+
+        // Upsert Subscription row
+        await prisma.subscription.upsert({
+            where: { userId: user.id },
+            update: {
+                stripe_sub_id: subscription.id,
+                plan,
+                frequency,
+                Status: status,
+            },
+            create: {
+                userId: user.id,
+                stripe_sub_id: subscription.id,
+                plan,
+                frequency,
+                Status: status,
+            }
+        });
 
         return({
+            success : true,
             subscription
-        })
+        });
 
     },
 
     // invoice.paid
-    async handleinvoicePaid(){
+    async handleinvoicePaid( event : Stripe.InvoicePaidEvent){
+        const data = event.data.object;
+        const stripe_customer_id = typeof data.customer === "string" ? data.customer : data.customer?.id
 
+        if(!stripe_customer_id){
+            throw new Error("No stripe_customer_id found");
+        }
+        const user = await prisma.user.findUnique({ where: { stripe_customer_id } });
+        if(!user){
+            throw new Error("User not found for stripe customer");
+        }
+        // Mark subscription as paid (active billing)
+        await prisma.subscription.update({
+            where: { userId: user.id },
+            data: { Status: Status.PAID }
+        });
     },
 
     // invoice.payment_failed
-    async handleinvoiceFailed(){
+    async handleinvoiceFailed( event : Stripe.InvoicePaymentFailedEvent){
+        const data = event.data.object;
+        const stripe_customer_id = typeof data.customer === "string" ? data.customer : data.customer?.id
 
+        if(!stripe_customer_id){
+            throw new Error("No stripe_customer_id found");
+        }
+        const user = await prisma.user.findUnique({ where: { stripe_customer_id } });
+        if(!user){
+            throw new Error("User not found for stripe customer");
+        }
+        // Keep subscription but leave status as-is; optionally could downgrade or mark ended later
+        // No-op update to ensure record exists
+        await prisma.subscription.findUnique({ where: { userId: user.id } });
     },
 
     // customer.subscription.updated
-    async handleSubscriptionUpdate(){
+    async handleSubscriptionUpdate( event : Stripe.CustomerSubscriptionUpdatedEvent){
+        const data = event.data.object;
+        const stripe_customer_id = typeof data.customer === "string" ? data.customer : data.customer?.id
 
+        if(!stripe_customer_id){
+            throw new Error("No stripe_customer_id found");
+        }
+        const user = await prisma.user.findUnique({ where: { stripe_customer_id } });
+        if(!user){
+            throw new Error("User not found for stripe customer");
+        }
+
+        // Re-map plan/frequency from updated subscription
+        const item = data.items.data[0];
+        const priceId = item?.price?.id;
+        const interval = item?.price?.recurring?.interval;
+        const status: Status = data.status === "trialing" ? Status.TRAIL : data.status === "active" ? Status.PAID : Status.ENDED;
+
+        let planToSet: Plan | undefined;
+        if(priceId){
+            if (plans.basic.monthly.price_id === priceId || plans.basic.yearly.price_id === priceId) planToSet = Plan.BASIC;
+            if (plans.plus.monthly.price_id === priceId || plans.plus.yearly.price_id === priceId) planToSet = Plan.PLUS;
+            if (plans.premium.monthly.price_id === priceId || plans.premium.yearly.price_id === priceId) planToSet = Plan.PREMIUM;
+        }
+        const dataUpdate: any = { Status: status, stripe_sub_id: data.id };
+        if(planToSet) dataUpdate.plan = planToSet;
+        if(interval) dataUpdate.frequency = interval === "month" ? Frequency.MONTHLY : Frequency.YEARLY;
+
+        await prisma.subscription.update({
+            where: { userId: user.id },
+            data: dataUpdate
+        });
     },
 
     // customer.subscription.deleted
-    async handleSubscriptionDeleted(){
+    async handleSubscriptionDeleted( event : Stripe.CustomerSubscriptionDeletedEvent){
+        const data = event.data.object;
+        const stripe_customer_id = typeof data.customer === "string" ? data.customer : data.customer?.id
 
+        if(!stripe_customer_id){
+            throw new Error("No stripe_customer_id found");
+        }
+        const user = await prisma.user.findUnique({ where: { stripe_customer_id } });
+        if(!user){
+            throw new Error("User not found for stripe customer");
+        }
+        await prisma.subscription.update({
+            where: { userId: user.id },
+            data: { Status: Status.ENDED }
+        });
     }
 }
-
 
 
 

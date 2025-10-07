@@ -31,7 +31,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   number        String?
-
+  
+  subscription  Subscription?
   invoices  Invoice[]
   label     Label?
 
@@ -134,3 +135,41 @@ model Label {
 
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+enum Plan {
+  FREE
+  BASIC
+  PLUS
+  PREMIUM
+}
+
+enum Frequency {
+  MONTHLY
+  YEARLY
+}
+
+enum Status {
+  TRAIL
+  PAID
+  ENDED
+}
+
+model Subscription {
+  id        String   @id     @default(cuid())
+  userId    String   @unique
+  stripe_sub_id String
+  plan      Plan
+  frequency Frequency 
+  Status    Status
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+// model SubscriptionUsage {
+//   id      String    @id    @default(cuid())
+    
+// }
