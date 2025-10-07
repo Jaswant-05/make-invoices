@@ -2,9 +2,9 @@
 
 import { User, userSigninSchema } from "../types/user";
 import bcrypt from "bcryptjs";
-import prisma from "../utils/db";
-import { generateCode } from "../utils/generate_code";
-import { sendPasswordResetEmail, sendVerificationEmail } from "../utils/resend";
+import prisma from "../../utils/db";
+import { generateCode } from "../../utils/generate_code";
+import { sendPasswordResetEmail, sendVerificationEmail } from "../../utils/resend";
 import z from "zod";
 
 export type AuthState = {

@@ -1,8 +1,8 @@
 "use client";
 
-import "../app/utils/setupWorker";
-import { createPdfBlob } from "@/app/utils/create-pdf-blob";
-import { parseCatchError } from "@/app/utils/parseCatchError";
+import "../utils/setupWorker";
+import { createPdfBlob } from "@/utils/create-pdf-blob";
+import { parseCatchError } from "@/utils/parseCatchError";
 import { useMounted, useResizeObserver } from "@mantine/hooks";
 import PDFLoading from "./PDFLoading";
 import PDFError from "./PDFError";

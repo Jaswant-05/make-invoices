@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import cn from "@/app/utils/clsx";
+import cn from "@/utils/clsx";
 
 type Variant = "primary" | "secondary";
 

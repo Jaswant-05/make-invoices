@@ -1,6 +1,6 @@
 import { userUpdateSchema } from "@/app/types/user";
-import { authOptions } from "@/app/utils/auth-option";
-import prisma from "@/app/utils/db";
+import { authOptions } from "@/utils/auth-option";
+import prisma from "@/utils/db";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 

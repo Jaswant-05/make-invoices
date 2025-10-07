@@ -23,6 +23,7 @@ model User {
   emailToken    String? @unique
   image         String?
   address   String?
+  stripe_customer_id  String?   @unique
 
   passwordToken String? @unique
   tokenExpiry   DateTime?

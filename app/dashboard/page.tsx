@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { invoiceFormSchema } from "../types/invoice";
 import { useEffect, useState } from 'react';
-import { createPdfBlob } from '../utils/create-pdf-blob';
+import { createPdfBlob } from '../../utils/create-pdf-blob';
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { createInvoice } from '../action/invoice';

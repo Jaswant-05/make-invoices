@@ -1,4 +1,4 @@
-import cn from "@/app/utils/clsx";
+import cn from "@/utils/clsx";
 import { forwardRef } from "react";
 
 type Variant = "primary" | "secondary"

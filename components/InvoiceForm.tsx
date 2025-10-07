@@ -20,7 +20,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Textarea } from "./ui/textarea";
-import { currency_codes } from "@/app/utils/currency";
+import { currency_codes } from "@/utils/currency";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar } from "./ui/calendar";

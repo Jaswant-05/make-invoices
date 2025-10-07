@@ -1,8 +1,8 @@
 "use server"
 import { invoiceFormSchema, InvoiceFormSchema } from "../types/invoice";
 import { getServerSession } from "next-auth";
-import prisma from "../utils/db";
-import { authOptions } from "../utils/auth-option";
+import prisma from "../../utils/db";
+import { authOptions } from "../../utils/auth-option";
 // {
 //     companyName: 'Numericnest.Inc',
 //     companyAddress: '63 Iceland poppy trail, Brampton, ON, L7A 0N1',
