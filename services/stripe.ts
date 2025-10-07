@@ -147,16 +147,13 @@ export const stripeService = {
         }
 
         const subscription = await stripe.subscriptions.retrieve(subscription_id);
-        // Ensure we have the subscription before checking status
         if(!subscription){
             throw new Error("Error retrieving subscription from stripe");
         }
-        // Accept trialing or active at completion time
         if(subscription.status !== "active" && subscription.status !== "trialing"){
             throw new Error("Subscription is not active or trialing");
         }
 
-        // Determine plan and frequency from the subscription's price
         const item = subscription.items.data[0];
         const price = item?.price;
         const priceId = price?.id;
@@ -181,7 +178,6 @@ export const stripeService = {
         const frequency: Frequency = interval === "month" ? Frequency.MONTHLY : Frequency.YEARLY;
         const status: Status = subscription.status === "trialing" ? Status.TRAIL : Status.PAID;
 
-        // Upsert Subscription row
         await prisma.subscription.upsert({
             where: { userId: user.id },
             update: {

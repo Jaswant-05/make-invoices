@@ -4,7 +4,7 @@ import {
     ContainerClient
 } from "@azure/storage-blob";
 
-enum TYPE {
+export enum TYPE {
     READ,
     WRITE
 }

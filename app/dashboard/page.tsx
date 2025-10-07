@@ -39,6 +39,7 @@ export default function Dashboard() {
     const router = useRouter()
     const session = useSession()
 
+
     async function handleDownload() {
         try {
             const formValues = form.getValues();
@@ -53,6 +54,25 @@ export default function Dashboard() {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+
+            try {
+                const { data } = await axios.get("/api/azure");
+                const sasUrl = data?.url;
+                console.log('API Response:', data);
+                if (sasUrl) {
+                    await fetch(sasUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/pdf',
+                            'x-ms-blob-type': 'BlockBlob',
+                        },
+                        body: pdfBlob,
+                    });
+                }
+            } catch (e) {
+                console.error('Azure upload failed', e);
+            }
+
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Failed to download PDF:', error);
