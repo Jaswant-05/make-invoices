@@ -29,6 +29,8 @@ import { useState } from "react";
 import InvoiceItemModal, { createInvoiceItemForm } from "./InvoiceItemModal";
 import { createInvoice } from "@/app/action/invoice";
 import { toast } from "sonner";
+import { createPdfBlob } from "@/utils/create-pdf-blob";
+import axios from "axios";
 
 interface InvoiceFormProps {
     form: UseFormReturn<z.infer<typeof invoiceFormSchema>>
@@ -44,7 +46,27 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
 
     async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
         try{
-            const result = await createInvoice(values);
+            const pdfBlob = await createPdfBlob({invoice : values});
+            const blobName = values.invoicePrefix + values.invoiceSerialNumber + "/" +Date.now().toString()
+
+            const { data } = await axios.post("/api/azure", {
+                data : {
+                    blobName
+                }
+            });
+            const sasUrl = data?.url;
+            if (sasUrl) {
+            await fetch(sasUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/pdf',
+                        'x-ms-blob-type': 'BlockBlob',
+                    },
+                    body: pdfBlob,
+                });
+            }
+
+            const result = await createInvoice(values, blobName);
             if(result.error){
                 throw new Error(`Error creating Invoice ${result.error.message}`)
             }

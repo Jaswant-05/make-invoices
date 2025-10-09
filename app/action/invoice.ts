@@ -19,7 +19,7 @@ import { authOptions } from "../../utils/auth-option";
 //     additionalNotes: ''
 // }
 
-export async function createInvoice(formData : InvoiceFormSchema){
+export async function createInvoice(formData : InvoiceFormSchema, blobName : string){
     const { data, error } = invoiceFormSchema.safeParse(formData);
     if(error){
         return({
@@ -52,6 +52,7 @@ export async function createInvoice(formData : InvoiceFormSchema){
           ...data,
           total: invoiceTotal,
           total_with_tax,
+          blobName,
           userId    
         };
 

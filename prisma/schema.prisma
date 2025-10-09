@@ -92,6 +92,7 @@ model Invoice {
   toCompany   String
   toEmail     String
   toAddress   String?
+  blobName    String?
 
   currency            String   @default("CAD")  
   invoicePrefix       String   @default("INV-")

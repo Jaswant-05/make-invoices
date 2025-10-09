@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react';
 import { createPdfBlob } from '../../utils/create-pdf-blob';
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { createInvoice } from '../action/invoice';
 import axios from "axios"
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -54,25 +53,6 @@ export default function Dashboard() {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            try {
-                const { data } = await axios.get("/api/azure");
-                const sasUrl = data?.url;
-                console.log('API Response:', data);
-                if (sasUrl) {
-                    await fetch(sasUrl, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/pdf',
-                            'x-ms-blob-type': 'BlockBlob',
-                        },
-                        body: pdfBlob,
-                    });
-                }
-            } catch (e) {
-                console.error('Azure upload failed', e);
-            }
-
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Failed to download PDF:', error);
@@ -172,19 +152,7 @@ export default function Dashboard() {
             <div className="md:hidden absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-200 bg-white z-10">
                 <div className="flex gap-2">
                     <Button
-                        type="button"
-                        onClick={form.handleSubmit(async (values) => {
-                            try {
-                                const result = await createInvoice(values);
-                                if (result.error) {
-                                    throw new Error(`Error creating Invoice ${result.error.message}`);
-                                }
-                                toast.success("Successfully Saved Invoice");
-                            } catch (err: any) {
-                                console.error("Error creating Invoice", err.message);
-                                toast.warning("Error in creating an Invoice");
-                            }
-                        })}
+                        type="submit"
                         className="flex-1"
                     >
                         Save
