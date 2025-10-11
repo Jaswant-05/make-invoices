@@ -54,7 +54,8 @@ export const invoiceFormSchema = z.object({
     invoicePrefix : z.string().min(1, {message : "Invoice Prefix is required"}),
     invoiceSerialNumber : z.string().min(1, {message : "Serial number is required"}),
     invoiceDate : z.date({message : "Invoice date is required"}),
-    paymentTerms : z.string().optional(),
+    fieldName : z.string().optional(),
+    fieldValue  : z.string().optional(),
     invoiceItems : z.array(invoiceItemFormSchema).min(1, {
         message : "At least 1 Invoice Item is required"
     }),

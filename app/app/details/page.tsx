@@ -19,7 +19,7 @@ type State = "initial" | "loading" | "unauthenticated" | "ready"
 
 //Todo : Add Toast to show success and or fail
 
-export default function UserProfileForm() {
+export default function Page() {
     const session = useSession()
     const router = useRouter()
     const [state, setState] = useState<State>("initial");

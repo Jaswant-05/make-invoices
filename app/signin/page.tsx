@@ -43,7 +43,7 @@ export default function SignIn() {
         await getSession();
         setTimeout(() => {
           console.log("inside timeout")
-          router.push("/dashboard");
+          router.push("/app/dashboard");
           router.refresh();
         },1000)
         toast.success("Login Successfull")
@@ -60,7 +60,7 @@ export default function SignIn() {
     setIsLoading(true);
     try {
       await signIn("google", {
-        callbackUrl: "/dashboard"
+        callbackUrl: "/app/dashboard"
       });
     } catch (err) {
       toast.warning("Something went wrong")

@@ -3,21 +3,6 @@ import { invoiceFormSchema, InvoiceFormSchema } from "../types/invoice";
 import { getServerSession } from "next-auth";
 import prisma from "../../utils/db";
 import { authOptions } from "../../utils/auth-option";
-// {
-//     companyName: 'Numericnest.Inc',
-//     companyAddress: '63 Iceland poppy trail, Brampton, ON, L7A 0N1',
-//     companyEmail: 'jaswant@numericnest.com',
-//     companyNumber: '6472203706',
-//     toCompany: 'weone.inc',
-//     toEmail: 'harsha@weone.ca',
-//     invoiceCurrency: 'CAD',
-//     invoicePrefix: 'INV-',
-//     invoiceSerialNumber: '001',
-//     invoiceDate: 2025-09-17T14:46:45.270Z,
-//     paymentTerms: 'Due upon receipt',
-//     invoiceItems: [ { name: 'Landing Page', amount: 2999 } ],
-//     additionalNotes: ''
-// }
 
 export async function createInvoice(formData : InvoiceFormSchema, blobName : string){
     const { data, error } = invoiceFormSchema.safeParse(formData);

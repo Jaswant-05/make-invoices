@@ -112,10 +112,10 @@ import {
               <Text style={styles.value}>
                 {invoice.invoiceDate ? new Date(invoice.invoiceDate).toLocaleDateString() : ""}
               </Text>
-              {invoice.paymentTerms && (
+              {invoice.fieldName && (
                 <>
-                  <Text style={[styles.label, { marginTop: 6 }]}>Terms</Text>
-                  <Text style={styles.value}>{invoice.paymentTerms}</Text>
+                  <Text style={[styles.label, { marginTop: 6 }]}>{invoice.fieldName}</Text>
+                  <Text style={styles.value}>{invoice.fieldValue}</Text>
                 </>
               )}
             </View>

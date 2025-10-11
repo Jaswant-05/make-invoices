@@ -7,9 +7,9 @@ ssr: false,
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { invoiceFormSchema } from "../types/invoice";
+import { invoiceFormSchema } from "../../types/invoice";
 import { useEffect, useState } from 'react';
-import { createPdfBlob } from '../../utils/create-pdf-blob';
+import { createPdfBlob } from '../../../utils/create-pdf-blob';
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import axios from "axios"
@@ -73,7 +73,8 @@ export default function Dashboard() {
             invoicePrefix: "INV-",
             invoiceSerialNumber: "001",
             invoiceDate: new Date(),
-            paymentTerms: "Due upon receipt",
+            fieldName : "",
+            fieldValue : "",
             additionalNotes: "",
             invoiceItems: [],
             tax : 0 

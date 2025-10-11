@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { download } from "./page"
+import { download } from "../app/app/invoices/page"
 
 export type Invoice = {
   id: string

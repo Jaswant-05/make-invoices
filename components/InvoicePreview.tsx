@@ -42,7 +42,8 @@ function makeSafeInvoice(v: Partial<InvoiceValues>): InvoiceValues {
     invoicePrefix: v.invoicePrefix ?? "INV-",
     invoiceSerialNumber: v.invoiceSerialNumber ?? "001",
     invoiceDate: v.invoiceDate ? new Date(v.invoiceDate) : new Date(),
-    paymentTerms: v.paymentTerms ?? "",
+    fieldName: v.fieldName ?? "",
+    fieldValue: v.fieldValue ?? "",
     additionalNotes: v.additionalNotes ?? "",
     invoiceItems: Array.isArray(v.invoiceItems)
       ? v.invoiceItems.map((it) => ({

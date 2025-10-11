@@ -71,7 +71,7 @@ export const stripeService = {
                 subscription_data : {
                     trial_period_days: 14
                 },
-                success_url: `${process.env.BASE_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+                success_url: `${process.env.BASE_URL}/app/dashboard?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${process.env.BASE_URL}`
             });
     
@@ -105,7 +105,7 @@ export const stripeService = {
         try{
             const session = await stripe.billingPortal.sessions.create({
                 customer: stripe_customer_id,
-                return_url : `${process.env.BASE_URL}/dashboard`
+                return_url : `${process.env.BASE_URL}/app/dashboard`
             })
 
             if(!session){

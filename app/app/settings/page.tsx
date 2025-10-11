@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 type State = "initial" | "loading" | "unauthenticated" | "ready"
 
-export default function () {
+export default function Page() {
     const session = useSession()
     const router = useRouter()
     const [state, setState] = useState<State>("initial");

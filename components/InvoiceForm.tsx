@@ -1,7 +1,6 @@
 "use client"
 
 import { invoiceFormSchema } from "@/app/types/invoice";
-import { FormTest } from "./FormTest";
 import { UseFormReturn } from "react-hook-form";
 import { Calendar as CalendarIcon, ListPlus } from "lucide-react"
 import { format } from "date-fns"
@@ -91,7 +90,6 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
 
     return (
         <div className="flex-1 border-r h-full">
-            {/* <FormTest/> */}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     
@@ -321,21 +319,38 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                                 <div className="flex gap-8">
                                     <FormField
                                         control={form.control}
-                                        name="paymentTerms"
+                                        name="fieldName"
                                         render={({ field }) => (
                                             <FormItem className="mb-4 flex-1">
-                                                <FormLabel className="text-sm text-neutral-600 tracking-tight">Payment Terms</FormLabel>
+                                                <FormLabel className="text-sm text-neutral-600 tracking-tight">Additional Field Name</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="100% Due Now" {...field} className="tracking-tight" />
+                                                    <Input placeholder="Buisness Number" {...field} className="tracking-tight" />
                                                 </FormControl>
                                                 <FormDescription className="text-[0.65rem] tracking-tight text-neutral-500">
-                                                    &#9432; Payment Terms.
+                                                    &#9432; Additional Field (Optional).
                                                 </FormDescription>
                                                 <FormMessage className="text-[0.65rem]" />
                                             </FormItem>
                                         )}
                                     />
                                     <FormField
+                                        control={form.control}
+                                        name="fieldValue"
+                                        render={({ field }) => (
+                                            <FormItem className="mb-4 flex-1">
+                                                <FormLabel className="text-sm text-neutral-600 tracking-tight">Additional Field Value</FormLabel>
+                                                <FormControl>
+                                                    <Input type="text" placeholder="" {...field}  className="tracking-tight" />
+                                                </FormControl>
+                                                <FormDescription className="text-[0.65rem] tracking-tight text-neutral-500">
+                                                    &#9432; Value for the additional field (Optional).
+                                                </FormDescription>
+                                                <FormMessage className="text-[0.65rem]" />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <FormField
                                         control={form.control}
                                         name="tax"
                                         render={({ field }) => (
@@ -351,7 +366,6 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                                             </FormItem>
                                         )}
                                     />
-                                </div>
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
@@ -398,6 +412,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
+
                     <Accordion type="single" collapsible className="border px-4 py-1 border-neutral-100 mb-0">
                         <AccordionItem value="item-5">
                             <AccordionTrigger className="text-md text-neutral-800 font-medium tracking-tight">Notes</AccordionTrigger>
@@ -421,6 +436,7 @@ export default function InvoiceForm({ form , handleDownload}: InvoiceFormProps) 
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
+
                     <div className="hidden md:flex items-center justify-end mb-0 mt-1 p-4 gap-2">
                         <Button type="submit">Save</Button>
                         <Button type="button" variant={"outline"} onClick={handleDownload}>Download</Button>

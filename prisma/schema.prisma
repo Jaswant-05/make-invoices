@@ -98,7 +98,8 @@ model Invoice {
   invoicePrefix       String   @default("INV-")
   invoiceSerialNumber String
   invoiceDate         DateTime
-  paymentTerms        String   @default("Due upon receipt")
+  fieldName           String? 
+  fieldValue          String?
   additionalNotes     String?
   tax                 Int      @default(0)
   total_with_tax      Int      @default(0)

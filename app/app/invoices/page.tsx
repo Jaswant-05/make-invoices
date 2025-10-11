@@ -1,10 +1,9 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/utils/auth-option";
-import { columns, Invoice } from "./columns"
-import { DataTable } from "./table";
+import { columns, Invoice } from "../../../components/columns"
+import { DataTable } from "../../../components/table";
 import prisma from "@/utils/db";
-import { Azure } from "@/services/azure";
 import axios from "axios";
 
 async function getData(): Promise<Invoice[]> {
@@ -62,7 +61,6 @@ export async function download(invoiceId: string) {
 
         const blob = await response.blob();
         const blobUrl = window.URL.createObjectURL(blob);
-
         const link = document.createElement('a');
         link.href = blobUrl;
         const date = new Date().toISOString().split('T')[0];
@@ -83,7 +81,7 @@ export async function download(invoiceId: string) {
     }
 }
 
-export default async function Invoices() {
+export default async function Page() {
     const session = await getServerSession(authOptions);
 
     if (!session) {
